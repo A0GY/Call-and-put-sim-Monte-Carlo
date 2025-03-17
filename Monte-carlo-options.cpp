@@ -41,7 +41,10 @@ double monteCarloOptionPricing(double initialStockPrice,double strikePrice,doubl
         // Calculate the stock price at maturity using the Black–Scholes model assumption:
         //     S_T = S_0 * exp( (r - 0.5 * sigma^2) * T + sigma * sqrt(T) * Z )
         double stockPriceAtMaturity = initialStockPrice * std::exp((riskFreeRate - 0.5 * volatility * volatility) * timeToMaturity + volatility * std::sqrt(timeToMaturity) * Z);
-
+		// ST the stock price predicted at maturity over 10,000 simulations
+       
+        
+        
         // Determine payoff depending on whether it's a Call or Put
         double payoff = 0.0;
         if (isCallOption) {

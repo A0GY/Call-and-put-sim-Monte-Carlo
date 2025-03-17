@@ -10,7 +10,8 @@
 #include <iostream>     
 #include <cmath>       
 #include <random>       
-#include <vector>       
+#include <vector>  
+#include <utility> 
 
 // Generates a single random draw from a Normal(mean, stddev) distribution
 double generateGaussianNoise(double mean, double stddev) {
@@ -30,7 +31,7 @@ double getPutPayoff(double stockPriceAtMaturity, double strikePrice) {
 }
 
 // Monte Carlo simulation for pricing a European option (Call or Put)
-double monteCarloOptionPricing(double initialStockPrice,double strikePrice,double riskFreeRate,double volatility,double timeToMaturity,int numberOfSimulations,bool isCallOption)
+std::pair<double,double> monteCarloOptionPricing(double initialStockPrice,double strikePrice,double riskFreeRate,double volatility,double timeToMaturity,int numberOfSimulations,bool isCallOption)
 {
     double totalPayoff = 0.0;
 
@@ -63,45 +64,41 @@ double monteCarloOptionPricing(double initialStockPrice,double strikePrice,doubl
 
     // Discount the average payoff back to present value using riskFreeRate
     double discountedPayoff = std::exp(-riskFreeRate * timeToMaturity) * averagePayoff;
-
-    return discountedPayoff;
+	double notDiscountedPayoff = averagePayoff;
+    return { discountedPayoff,notDiscountedPayoff };
 }
 
 int main() {
-	// options parameters
-    double initialStockPrice = 100.0;  // Current stock price (S0)
-    double strikePrice = 100.0;  // Strike price (K)
-    double riskFreeRate = 0.05;   // Annual risk-free rate (r) = 5%
-    double volatility = 0.2;    // Annual volatility (sigma) = 20%
-    double timeToMaturity = 1.0;    // Time in years until option expiration (T)
-    int    numberOfSimulations = 100000; // Number of Monte Carlo simulations
+    // Option parameters
+    double initialStockPrice = 100.0;
+    double strikePrice = 100.0;
+    double riskFreeRate = 0.05;
+    double volatility = 0.2;
+    double timeToMaturity = 1.0;
+    int numberOfSimulations = 100000;
 
-	// price of the call or put option using the monte carlo simulation
-    double callOptionPrice = monteCarloOptionPricing(
-        initialStockPrice,
-        strikePrice,
-        riskFreeRate,
-        volatility,
-        timeToMaturity,
-        numberOfSimulations,
-        true  //true indicates it's a Call
+    // Compute Call Option Prices
+    std::pair<double, double> callOptionPriceboth = monteCarloOptionPricing(
+        initialStockPrice, strikePrice, riskFreeRate, volatility, timeToMaturity, numberOfSimulations, true
     );
 
-    double putOptionPrice = monteCarloOptionPricing(
-        initialStockPrice,
-        strikePrice,
-        riskFreeRate,
-        volatility,
-        timeToMaturity,
-        numberOfSimulations,
-        false //false indicates it's a Put
+    double callOptionPrice = callOptionPriceboth.first;   // Discounted Call Price
+    double callOptionPricedis = callOptionPriceboth.second; // Non-discounted Call Price
+
+    // Compute Put Option Prices
+    std::pair<double, double> putOptionPriceBoth = monteCarloOptionPricing(
+        initialStockPrice, strikePrice, riskFreeRate, volatility, timeToMaturity, numberOfSimulations, false
     );
 
-    // print result
-    std::cout << "European Call Option Price: " << callOptionPrice << std::endl;
-    std::cout << "European Put  Option Price: " << putOptionPrice << std::endl;
+    double putOptionPrice = putOptionPriceBoth.first;   // Discounted Put Price
+    double putOptionPricedis = putOptionPriceBoth.second; // Non-discounted Put Price
 
-    return 0;  
+	std::cout << "The Put fair value is " << putOptionPrice << " and expected payoff at maturtiy is " << putOptionPricedis << std::endl;
+	std::cout << "The call fair vale is " << callOptionPrice << " and expected payoff at maturuity is  " << callOptionPricedis << std::endl;
+	// using std::pair to give the end user fiar value and expected payoff by taking in a extra result in monte carlo function
+	// which removes the discounting of the payoff calculations to give the expected payoff at maturity
+
+    return 0;
 }
 
 //S0 stock price at time 0 (now)

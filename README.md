@@ -9,7 +9,7 @@ the closed-form Black–Scholes price.
 ---
 
 ## 1  Features
-| ✔ | Detail |
+| | Detail |
 |---|--------|
 | **Numerical rigour** | tracks variance → prints *mean ± 1.96·stderr* (95 % CI). |
 | **Analytic benchmark** | closed-form Black–Scholes call; reports relative error. |
@@ -29,7 +29,7 @@ g++ -O3 -std=c++17 option_pricer/main.cpp -o pricer
 
 ### Visual Studio 2019/2022 (Windows)
 1. **Create** a “Console App” project.  
-2. **Project ▶ Properties ▶ C/C++ ▶ Language ▶ C++ Language Standard** → **ISO C++17 (/std:c++17)**.  
+2. **Project  - Properties - C/C++ - Language - C++ Language Standard** → **ISO C++17 (/std:c++17)**.  
 3. Add `main.cpp` to the project, **Build** (Ctrl-Shift-B) and **Run** (Ctrl-F5).
 
 ---

@@ -1,6 +1,6 @@
 # Monte-Carlo European Option Pricer (C++)
 
-> ✏️ Author — **Ali Yassine**   |   BSc Computer Science, University of Reading   |   April 2025
+> **A Y**   |   BSc Computer Science, University of Reading   |   April 2025
 
 A single-file C++ program that prices at-the-money European **call** and **put** options via
 Monte-Carlo simulation, computes a 95 % confidence interval, and benchmarks the result against
